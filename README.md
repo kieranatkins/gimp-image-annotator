@@ -3,7 +3,7 @@
 
 <h2>Installation</h2>
 
-Follow the guide here: https://en.wikibooks.org/wiki/GIMP/Installing_Plugins to find how to install GIMP plug-ins on your system, save the file `image-annotations.py` in GIMP's plug-in folder.
+Follow the guide here: https://en.wikibooks.org/wiki/GIMP/Installing_Plugins to find how to install GIMP plug-ins on your system, save the file `image-annotator.py` in GIMP's plug-in folder.
 
 <h4>Requirements</h4>
 
