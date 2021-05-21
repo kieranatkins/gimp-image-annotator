@@ -18,7 +18,7 @@ Once installed, navigate to *Toolbox* then *Image Annotator*, add the labels you
 
 <h4>What is saved?</h4>
 
-`gimp-image-annotator` saves a mask where the values within the associated json file, relate to the value of the mask. The mask is 3 colour channels, however each colour channel is the same therefore they can be dismissed when inputted, choosing any of the channels. 
+`gimp-image-annotator` saves a mask where the values within the associated json file, relate to the value of the mask. The mask is 3 colour channels, however each colour channel is the same therefore they can be dismissed when inputted, choosing any of the channels. An interpretation of the of the selection box is also saved as a svg path, this may be used or may not, it is not essential to the core functionality.
 
 <h4>How do I use the data?</h4>
 
