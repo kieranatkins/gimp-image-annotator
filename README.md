@@ -55,5 +55,5 @@ The masks can be inputted using most image processing software. For example in `
 
 <h2>To do</h2>
 
-- [ ] Implement deletion of region masks from displayed list.
+- [X] Implement deletion of region masks from displayed list.
 - [ ] Implement GIMP's undo feature so that masks are removed from the layer and the toolbox simultaniosuly / deactive undo within this software if not possible.
