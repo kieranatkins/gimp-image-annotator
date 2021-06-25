@@ -110,10 +110,9 @@ class IAWindow(gtk.Window):
         vbox.pack_start(self.mask_view, True, True, 2)
         
         # Create and add 'Show selected mask' button
-        #show_mask_btn = gtk.Button('Show selected mask')
-        #show_mask_btn.connect('clicked', self.show_mask_btn_on_click)
-        #vbox.pack_start(show_mask_btn, False, False, 2)
-        
+        show_mask_btn = gtk.Button('Show selected mask')
+        show_mask_btn.connect('clicked', self.show_mask_btn_on_click)
+        vbox.pack_start(show_mask_btn, False, False, 2)
         
         # Create and add 'Delete selected mask' button
         del_btn = gtk.Button('Delete selected mask')
@@ -150,7 +149,25 @@ class IAWindow(gtk.Window):
 
         return win
         
+    """
+    Creates selection of selected mask on list
+    """
+    def show_mask_btn_on_click(self, widget):
         
+        # Gets currently selected row model and iter
+        ts = self.mask_view.get_selection()
+        tm, ti = ts.get_selected()
+        
+        # Gets selected row index and its 'ID' value
+        index = ts.get_selected_rows()[1][0][0]
+        val = tm.get_value(ti, 1)
+        
+        pdb.gimp_selection_none(self.img)
+        pdb.gimp_context_set_sample_threshold_int(0)
+        pdb.gimp_image_select_color(self.img, 2, self.annot_layer, id2rgb(val))
+        
+    
+    
     """
     Deletes selected row from the widget, database and annotation layer
     """
@@ -265,9 +282,6 @@ class IAWindow(gtk.Window):
 
         # Create the string to be displayed in the TreeView
         self.mask_store.append([label, self.region_id])
-        
-        # Add the text in the model for the TreeView to be displayed to the user
-        self.mask_store.append([text])
         
         # Add 1 to the region id (i.e. move onto the next region)
         self.region_id += 1
