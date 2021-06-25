@@ -9,76 +9,79 @@ import json
 import errno
 
 class IAWindow(gtk.Window):
-
+    
+    # init the GUI
     def __init__(self, img, layer, *args):
         NAME = 'Image Annotator'
+
         self.running = False
-
-        # stores the filepath of the current gimp image
+        
+        # Stores the filepath of the current gimp image
         self.img = img
-
-        # layer holding the annotation mask
+        
+        # Layer holding the annotation mask
         self.annot_layer = layer
-
-        # initialise the window
+        
+        # Initialise the window
         win = gtk.Window.__init__(self, *args)
         self.set_title(NAME)
         self.set_border_width(10)
 
         # Obey the window manager quit signal:
         self.connect("destroy", self.reset_and_quit)
-
-        # The main layout, holds all other layouts
-        main_vbox = gtk.VBox(spacing=8)
-
+        
+        #The main layout, holds all other layouts
+        vbox = gtk.VBox(spacing=8)
+        
         # Add the main layout to the Window (self)
-        self.add(main_vbox)
-
+        self.add(vbox)
+        
         # Create and add label denoting label creation section
         new_label_label = gtk.Label('Label creation')
-        main_vbox.pack_start(new_label_label, False, False, 0)
-
+        new_label_label.set_justify(gtk.JUSTIFY_LEFT)
+        vbox.pack_start(new_label_label, False, False, 0)
+        
         # Create and add text entry box for labels
         self.add_label_entry = gtk.Entry()
-        main_vbox.pack_start(self.add_label_entry, False, False, 2)
+        vbox.pack_start(self.add_label_entry, False, False, 2)
         
-        # Create and add 'add label button'
+        # Create, add and connect 'add label button'
         add_label_val_btn = gtk.Button('Add label value')
-        # Connect add_label_on_click function to the clicking of the add_label button
         add_label_val_btn.connect("clicked", self.add_label_on_click)
-        main_vbox.pack_start(add_label_val_btn, False, False, 2)
-
+        vbox.pack_start(add_label_val_btn, False, False, 2)
+        
         # Add section seperator (no functionality, only aesthetics)
         hseperator_1 = gtk.HSeparator()
-        main_vbox.pack_start(hseperator_1, False, False, 2)
+        vbox.pack_start(hseperator_1, False, False, 2)
 
         # Create and add 'Mask creation' label
         add_label_label = gtk.Label('Mask creation')
-        main_vbox.pack_start(add_label_label, False, False, 0)
-
+        add_label_label.set_justify(gtk.JUSTIFY_LEFT)
+        vbox.pack_start(add_label_label, False, False, 0)
+        
         # Mask creation HBox
-        mask_hbox = gtk.HBox(spacing=2)
+        hbox = gtk.HBox(spacing=2)
         
         # Create and add combo box that holds added labels to be added by the user as masks
         self.label_combo = gtk.combo_box_new_text()
-        mask_hbox.pack_start(self.label_combo, True, True, 2)
+        hbox.pack_start(self.label_combo, True, True, 2)
         
-        # value to keep track of the region being saved, independent of label
+        # Value to keep track of the region being saved, independent of label
         self.region_id = 1
         self.max_id = 1
 
         # Create and add SpinButton to hold the value of the region_id to be saved
         self.sb_adj = gtk.Adjustment(value=1, lower=1, upper=1)
         self.instance_id_btn = gtk.SpinButton(climb_rate=1.0, digits=0, adjustment=self.sb_adj)
-        mask_hbox.pack_start(self.instance_id_btn, False, False, 2)
-
+        hbox.pack_start(self.instance_id_btn, False, False, 2)
+        
         # Add mask_hbox to the main_vbox
-        main_vbox.pack_start(mask_hbox, False, False, 2)
-
+        vbox.pack_start(hbox, False, False, 2)
+        
         # Create and add 'Save selected mask' label
         add_mask_btn = gtk.Button('Save selected mask')
         add_mask_btn.connect("clicked", self.save_mask_on_click)
-        main_vbox.pack_start(add_mask_btn, False, False, 2)
+        vbox.pack_start(add_mask_btn, False, False, 2)
 
         # Dict to keep track of the amount of regions (consequently, number of IDs) present
         self.region_db = dict()
@@ -87,66 +90,98 @@ class IAWindow(gtk.Window):
         # saved so that they may be used by a neural network later
         self.path_db = dict()
 
-        # Create list to be displayed to the user of saved masks
-
-        # Object storing text values to be display to the user
-        self.mask_store = gtk.ListStore(gobject.TYPE_STRING)
-
+        # Object storing text values to be displayED to the user
+        self.mask_store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        
         # Gtk widget that displays ListStore to user
         self.mask_view = gtk.TreeView(model=self.mask_store)
-
+        
         # Default renderer for displaying text
         renderer = gtk.CellRendererText()
-
-        # Only one column needs to be displayed, only one added
-        self.masks_col = gtk.TreeViewColumn('Masks', renderer, text=0)
         
+        # Displays 'ID' and 'Masks' columns
+        self.id_col = gtk.TreeViewColumn('ID', renderer, text=1)
+        self.mask_view.append_column(self.id_col) 
+        
+        self.masks_col = gtk.TreeViewColumn('Masks', renderer, text=0)
         self.mask_view.append_column(self.masks_col)
-
+        
         self.mask_view.set_size_request(-1, 200)
-        main_vbox.pack_start(self.mask_view, True, True, 2)
+        vbox.pack_start(self.mask_view, True, True, 2)
+        
+        # Create and add 'Show selected mask' button
+        #show_mask_btn = gtk.Button('Show selected mask')
+        #show_mask_btn.connect('clicked', self.show_mask_btn_on_click)
+        #vbox.pack_start(show_mask_btn, False, False, 2)
+        
+        
+        # Create and add 'Delete selected mask' button
+        del_btn = gtk.Button('Delete selected mask')
+        del_btn.connect('clicked', self.del_btn_on_click)
+        vbox.pack_start(del_btn, False, False, 2)
 
-        # Create and add 'Export Files & Quit' button
+        # Create, add and connect 'Export Files & Quit' button
         export_btn = gtk.Button('Export files & quit')
-
-        # Connect export_on_click function to the export_btn button
-        export_btn.connect("clicked", self.export_on_click)
-        main_vbox.pack_start(export_btn, False, False, 2)
+        export_btn.connect('clicked', self.export_on_click)
+        vbox.pack_start(export_btn, False, False, 2)
 
         # Render all widgets to be displayed to the user
         self.show_all()
 
-
         # Save the original antialiasing settings to be restored when program is quit
         # 1/0 masks are required and AA creates blending effect - NOT WANTED
         self.orig_aa_setting = pdb.gimp_context_get_antialias()
-
+        
         # Force AA settings to false
         pdb.gimp_context_set_antialias(False)
-
-
-        # Retrieve the filename of the current loaded image - crashes if temp is loaded
+        
+        # Retrieve image filename and directory, then save image and create paths
+        # for masks and annotatons
         self.filename = pdb.gimp_image_get_filename(self.img)
-
-        # Retrieve the directory of where the image is saved
         self.dir = os.path.split(self.filename)
-
-        # Save the image name
         self.img_name = os.path.splitext(self.dir[1])
-
-        # Create path of where masks will be saved
         self.mask_dir = os.path.join(self.dir[0], 'masks/')
-
-        # Create path of where annotations will be saved
         self.annot_dir = os.path.join(self.dir[0], 'annotations/')
 
-
+        self.main_layer = pdb.gimp_image_get_active_layer(self.img)
 
         self.selection_area_setup()
         pdb.gimp_displays_flush()
 
         return win
-
+        
+        
+    """
+    Deletes selected row from the widget, database and annotation layer
+    """
+    def del_btn_on_click(self, widget):
+        
+        # Gets currently selected row model and iter
+        ts = self.mask_view.get_selection()
+        tm, ti = ts.get_selected()
+        
+        # Gets selected row index and its 'ID' value
+        index = ts.get_selected_rows()[1][0][0]
+        val = tm.get_value(ti, 1)
+        
+        # Deletes the mask from the list self.mask_store
+        if index is not None:
+            del self.mask_store[index]
+        else:
+            pdb.gimp_message('Selection not valid')
+            
+        # Deletes the mask from database
+        if val is not None:
+            del self.region_db[int(val)]
+        else:
+            pdb.gimp_message('No database entry found')
+        
+        # Deletes the mask from the annotation layer
+        pdb.gimp_context_set_sample_threshold_int(0)
+        pdb.gimp_image_select_color(self.img, 2, self.annot_layer, id2rgb(val))
+        pdb.gimp_drawable_edit_fill(self.annot_layer, 2)
+        pdb.gimp_selection_none(self.img)
+               
     """
     Adds text within the add_label_entry and places it as an option in the 
     label selector
@@ -173,13 +208,14 @@ class IAWindow(gtk.Window):
 
         # Create the new layer with the aforementioned height and width
         # 0 = foregound fill, 28 = layer fill normal
-        self.annot_layer = pdb.gimp_layer_new(self.img, self.width, self.height, 0, NAME, 100, 28)
+        self.annot_layer = pdb.gimp_layer_new(self.img, self.width, self.height, 0, NAME, 100, 28) #last param seems temperamental
 
         # Add the created layer to the image
         pdb.gimp_image_insert_layer(self.img, self.annot_layer, None, 1)
         
         # Fill the image with white (255,255,255) to denote background
         pdb.gimp_drawable_fill(self.annot_layer, 2)
+        pdb.gimp_image_set_active_layer(self.img, self.main_layer)
         pdb.gimp_message('Setup Complete.')
 
 
@@ -228,8 +264,8 @@ class IAWindow(gtk.Window):
         self.region_db[self.region_id] = label
 
         # Create the string to be displayed in the TreeView
-        text = '(' + str(self.region_id) + ') ' + str(label)
-
+        self.mask_store.append([label, self.region_id])
+        
         # Add the text in the model for the TreeView to be displayed to the user
         self.mask_store.append([text])
         
@@ -244,6 +280,7 @@ class IAWindow(gtk.Window):
             self.sb_adj.set_upper(self.max_id)
         
         self.sb_adj.set_value(self.max_id)
+
 
     """
     Saves the annotation layer as it's own image in the masks folder, along with saving the 
