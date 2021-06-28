@@ -31,33 +31,33 @@ class IAWindow(gtk.Window):
         self.connect("destroy", self.reset_and_quit)
         
         #The main layout, holds all other layouts
-        vbox = gtk.VBox(spacing=8)
+        vbox_main = gtk.VBox(spacing=8)
         
         # Add the main layout to the Window (self)
-        self.add(vbox)
+        self.add(vbox_main)
         
         # Create and add label denoting label creation section
         new_label_label = gtk.Label('Label creation')
         new_label_label.set_justify(gtk.JUSTIFY_LEFT)
-        vbox.pack_start(new_label_label, False, False, 0)
+        vbox_main.pack_start(new_label_label, False, False, 0)
         
         # Create and add text entry box for labels
         self.add_label_entry = gtk.Entry()
-        vbox.pack_start(self.add_label_entry, False, False, 2)
+        vbox_main.pack_start(self.add_label_entry, False, False, 2)
         
         # Create, add and connect 'add label button'
         add_label_val_btn = gtk.Button('Add label value')
         add_label_val_btn.connect("clicked", self.add_label_on_click)
-        vbox.pack_start(add_label_val_btn, False, False, 2)
+        vbox_main.pack_start(add_label_val_btn, False, False, 2)
         
         # Add section seperator (no functionality, only aesthetics)
         hseperator_1 = gtk.HSeparator()
-        vbox.pack_start(hseperator_1, False, False, 2)
+        vbox_main.pack_start(hseperator_1, False, False, 2)
 
         # Create and add 'Mask creation' label
         add_label_label = gtk.Label('Mask creation')
         add_label_label.set_justify(gtk.JUSTIFY_LEFT)
-        vbox.pack_start(add_label_label, False, False, 0)
+        vbox_main.pack_start(add_label_label, False, False, 0)
         
         # Mask creation HBox
         hbox = gtk.HBox(spacing=2)
@@ -76,12 +76,12 @@ class IAWindow(gtk.Window):
         hbox.pack_start(self.instance_id_btn, False, False, 2)
         
         # Add mask_hbox to the main_vbox
-        vbox.pack_start(hbox, False, False, 2)
+        vbox_main.pack_start(hbox, False, False, 2)
         
         # Create and add 'Save selected mask' label
         add_mask_btn = gtk.Button('Save selected mask')
         add_mask_btn.connect("clicked", self.save_mask_on_click)
-        vbox.pack_start(add_mask_btn, False, False, 2)
+        vbox_main.pack_start(add_mask_btn, False, False, 2)
 
         # Dict to keep track of the amount of regions (consequently, number of IDs) present
         self.region_db = dict()
@@ -95,34 +95,40 @@ class IAWindow(gtk.Window):
         
         # Gtk widget that displays ListStore to user
         self.mask_view = gtk.TreeView(model=self.mask_store)
+        self.mask_view.connect('size-allocate', self.treeview_changed)
         
         # Default renderer for displaying text
         renderer = gtk.CellRendererText()
         
         # Displays 'ID' and 'Masks' columns
-        self.id_col = gtk.TreeViewColumn('ID', renderer, text=1)
+        self.id_col = gtk.TreeViewColumn('ID ', renderer, text=1)
         self.mask_view.append_column(self.id_col) 
         
-        self.masks_col = gtk.TreeViewColumn('Masks', renderer, text=0)
+        self.masks_col = gtk.TreeViewColumn('Mask Label', renderer, text=0)
         self.mask_view.append_column(self.masks_col)
         
+        # Adds ScrolledWindow for displaying TreeView
+        sw = gtk.ScrolledWindow()
+        sw.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
+        sw.add(self.mask_view)
+        
         self.mask_view.set_size_request(-1, 200)
-        vbox.pack_start(self.mask_view, True, True, 2)
+        vbox_main.pack_start(sw, True, True, 2)
         
         # Create and add 'Show selected mask' button
         show_mask_btn = gtk.Button('Show selected mask')
         show_mask_btn.connect('clicked', self.show_mask_btn_on_click)
-        vbox.pack_start(show_mask_btn, False, False, 2)
+        vbox_main.pack_start(show_mask_btn, False, False, 2)
         
         # Create and add 'Delete selected mask' button
         del_btn = gtk.Button('Delete selected mask')
         del_btn.connect('clicked', self.del_btn_on_click)
-        vbox.pack_start(del_btn, False, False, 2)
+        vbox_main.pack_start(del_btn, False, False, 2)
 
         # Create, add and connect 'Export Files & Quit' button
         export_btn = gtk.Button('Export files & quit')
         export_btn.connect('clicked', self.export_on_click)
-        vbox.pack_start(export_btn, False, False, 2)
+        vbox_main.pack_start(export_btn, False, False, 2)
 
         # Render all widgets to be displayed to the user
         self.show_all()
@@ -165,8 +171,13 @@ class IAWindow(gtk.Window):
         pdb.gimp_selection_none(self.img)
         pdb.gimp_context_set_sample_threshold_int(0)
         pdb.gimp_image_select_color(self.img, 2, self.annot_layer, id2rgb(val))
-        
     
+    """
+    Auto-scrolls TreeView to last entry when added
+    """    
+    def treeview_changed( self, widget, event, data=None ):
+        adj = widget.get_vadjustment()
+        adj.set_value( adj.get_upper() - adj.get_page_size() )
     
     """
     Deletes selected row from the widget, database and annotation layer
