@@ -331,17 +331,11 @@ class IAWindow(gtk.Window):
         # Attempt saving of the annotation layer, if any error is raised, displayed to the user
         try:
             pdb.gimp_message('Attempting save of ' + str(self.annot_layer) + 'AKA (' + str(mask_filename) +  ') to ' + str(mask_path))
-            pdb.file_png_save(None,                 # Input image
-                              self.annot_layer,     # Drawable to save
-                              mask_path,            # Path to save the image to
-                              mask_filename,        # Name of the saved image
-                              False,                # Interlacing?
-                              0,                    # Compression?
-                              True,                 # bKGD?
-                              True,                 # gAMA?
-                              True,                 # oFFs?
-                              True,                 # pHYs?
-                              True)                 # tIME?
+            pdb.file_png_save_defaults(None,                 # Input image
+                                       self.annot_layer,     # Drawable to save
+                                       mask_path,            # Path to save the image to
+                                       mask_filename,        # Name of the saved image
+                                       )                 
             pdb.gimp_message('layer saved')
         except Exception as e:
             pdb.gimp_message(e)
