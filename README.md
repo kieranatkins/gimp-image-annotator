@@ -50,7 +50,7 @@ The masks can be inputted using most image processing software. For example in `
     import cv2
 
     img = cv2.imread(PATH)
-    mask, _, _ = cv2.split()
+    mask, _, _ = cv2.split(img)
 ````
 
 <h2>To do</h2>
