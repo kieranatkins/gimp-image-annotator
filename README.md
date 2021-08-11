@@ -37,7 +37,7 @@ The annotation data can be inputted using standard JSON parsing libraries, in Py
         ...
        },
        "image" : "image_filename.png",
-       "mask" : "image_filename_mask.png
+       "mask" : "image_filename_mask.png"
     }
 ````
 
