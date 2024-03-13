@@ -315,8 +315,14 @@ class IAWindow(gtk.Window):
     def export_on_click(self, widget):
         pdb.gimp_message('Exporting...')
         # If the mask/annot directory doesn't exist, make it
+
         try:
             os.makedirs(self.mask_dir)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
+
+        try:
             os.makedirs(self.annot_dir)
         except OSError as e:
             if e.errno != errno.EEXIST:
