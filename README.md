@@ -22,7 +22,7 @@ Once installed, navigate to *Toolbox* then *Image Annotator*, add the labels you
 
 <h4>How do I use the data?</h4>
 
-The annotation data can be inputted using standard JSON parsing libraries, in Python this is `import json` where it will be loaded as a `dict()`. The structure of the annotation files are as follows:
+The annotation data can be inputted using standard JSON parsing libraries, in Python this is `import json` where it will be loaded as a `dict`. The structure of the annotation files are as follows:
 
 ````    JSON
     {
