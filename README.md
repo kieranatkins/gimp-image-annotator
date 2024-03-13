@@ -48,9 +48,7 @@ The masks can be inputted using most image processing software. For example in `
 
 ````    Python
     import cv2
-
-    img = cv2.imread(PATH)
-    mask, _, _ = cv2.split(img)
+    mask = cv2.imread(PATH, cv2.IMREAD_GRAYSCALE)
 ````
 
 <h2>To do</h2>
