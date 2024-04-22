@@ -18,15 +18,16 @@ Once installed, navigate to *Toolbox* then *Image Annotator*, add the labels you
 
 
 <h4>How do I use the data?</h4>
+
 *gimp-image-annotator* saves a binary mask of each annotation, with class of mask stored in the `_annotations.json` file. The `_annotations.json` file is structured as followed
 
 
 ````    JSON
-    {[
-      'id':int,
-      'filename':str,
-      'label':str
-    ]}
+    [{
+      "label": "string"
+      "id": "int",
+      "filename": "string",
+    }]
 ````
 
 The masks can be inputted using most image processing software. For example in `opencv-python` it would be:
