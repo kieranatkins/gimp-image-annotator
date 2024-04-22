@@ -143,6 +143,9 @@ class IAWindow(gtk.Window):
         # Retrieve image filename and directory, then save image and create paths
         # for masks and annotatons
         self.filename = pdb.gimp_image_get_filename(self.img)
+        if self.filename is None:
+            pdb.gimp_message('Image must be saved in location first.')
+
         self.dir = os.path.split(self.filename)
         self.img_name = os.path.splitext(self.dir[1])
         self.mask_dir = os.path.join(self.dir[0], 'masks/')
