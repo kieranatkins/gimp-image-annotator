@@ -1,5 +1,5 @@
 # gimp-image-annotator
-*A GIMP plug-in to allow for direct generation of instance segementation masks for use in machine learning projects, using the power of the GIMP selection tools.*
+*gimp-image-annotator or GIÀ, a lightweight GIMP plug-in to alllow for computer vision-assisted image annotation usig the powerful GIMP selection toolbox.*
 
 <h2>Installation</h2>
 
