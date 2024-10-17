@@ -1,5 +1,5 @@
 # gimp-image-annotator
-*gimp-image-annotator or GIÀ, a lightweight GIMP plug-in to alllow for computer vision-assisted image annotation usig the powerful GIMP selection toolbox.*
+*gimp-image-annotator or GIÀ, a lightweight GIMP plug-in to alllow for computer vision-assisted image annotation using the powerful GIMP selection toolbox.*
 
 <h2>Installation</h2>
 
