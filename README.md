@@ -9,7 +9,7 @@ In GIMP v2.x, the plug-in system relies on deprecated python2. On Windows, a ver
 
 <h2>Using the software</h2>
 
-Once installed, navigate to *Toolbox* then *Image Annotator*, add the labels you want, select one, use GIMP's selection tools (a guide can be found here: https://docs.gimp.org/en/gimp-tools-selection.html) to select an area (use Quick Mask or Shift+Q to quickly see the mask you have created). **Make sure antialisaing and feathering is off, you cannot turn it off for rectangle select however it isn't used**. Once you have your desired selected area, press *Save selected mask*. Repeat until all areas are selected (be aware, if you save a new selection that covers a previous selection it **will** be overwritten). When finished press *Export files & quit*, where *mask* and *annotations* folders will be created in the working directory and each saved there.
+Once installed, navigate to *Toolbox* then *Image Annotator*, add the labels you want, select one, use GIMP's selection tools (e.g. The Fuzzy Select tool - a guide can be found here: https://docs.gimp.org/en/gimp-tools-selection.html) to select an area (use Quick Mask or Shift+Q to quickly see the mask you have created). **Make sure antialisaing and feathering is off, you cannot turn it off for rectangle select however it isn't used**. Once you have your desired selected area, press *Save selected mask*. Repeat until all areas are selected (be aware, if you save a new selection that covers a previous selection it **will** be overwritten). When finished press *Export files & quit*, where *mask* and *annotations* folders will be created in the working directory and each saved there.
 
 <h4>How do I use the data?</h4>
 
