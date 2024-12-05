@@ -1,6 +1,8 @@
 # gimp-image-annotator
 *gimp-image-annotator or GIÀ, a lightweight GIMP plug-in to alllow for computer vision-assisted image annotation using the powerful GIMP selection toolbox.*
 
+![](https://github.com/kieranatkins/gimp-image-annotator/blob/main/anim.gif)
+
 <h2>Installation</h2>
 
 Follow the guide here: https://en.wikibooks.org/wiki/GIMP/Installing_Plugins to find how to install GIMP plug-ins on your system, save the file `image-annotator.py` in GIMP's plug-in folder. 
