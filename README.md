@@ -24,7 +24,7 @@ Once installed, navigate to *Toolbox* then *Image Annotator*, add the labels you
 ````    JSON
     [{
       "label": "string",
-      "id": "int",
+      "id": int,
       "filename": "string"
     }]
 ````
