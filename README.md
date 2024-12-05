@@ -36,6 +36,3 @@ The masks can be inputted using most image processing software. For example in `
     import cv2
     mask = cv2.imread(PATH, cv2.IMREAD_GRAYSCALE)
 ````
-
-# License 
-This project is released under [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html).
