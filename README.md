@@ -2,7 +2,7 @@
 *gimp-image-annotator or GIÀ, a lightweight GIMP plug-in to alllow for computer vision-assisted image annotation using the powerful GIMP selection toolbox.*
 
 <p align="center">
-  <img src="http://some_place.com/image.png](https://github.com/kieranatkins/gimp-image-annotator/blob/main/anim.gif" />
+  <img src="https://github.com/kieranatkins/gimp-image-annotator/blob/main/anim.gif" />
 </p>
 
 
